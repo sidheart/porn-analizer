@@ -3,6 +3,11 @@
 import urllib.request
 import http.client
 import os
+import threading
+from queue import Queue
+
+q = Queue()
+file_lock = threading.Lock()
 
 # Set the HTTP version to 1.0 (this avoids incomplete read errors)
 http.client.HTTPConnection._http_vsn = 10
@@ -25,10 +30,9 @@ bashExtract = '''cat stats.txt | grep -e '<a href.*title=\".*</a>' | sed 's/.*"/
 # stats.txt is an intermediate file used to hold GET data
 dataFile = open('stats.txt', 'wb+')
 
-# Get data from the first n pages where n is the range
-for i in range(1,10):
+def getPage(n):
     # As of 5/4/2017 Pornhub's top rated pages use this url format
-    url = "https://www.pornhub.com/video?o=tr&page=%d"%(i)
+    url = "https://www.pornhub.com/video?o=tr&page=%d"%(n)
     # Send an HTTP GET request and read the data
     request = urllib.request.urlopen(url)
     try:
@@ -36,13 +40,34 @@ for i in range(1,10):
     except http.client.IncompleteRead as  e:
         data = e.partial
     # Write the data into a file that will be parsed for titles later
-    dataFile.write(data)
+    with file_lock:
+        dataFile.write(data)
     request.close()
+
+# handles multithreading capabilities, pulls a worker from the queue of tasks
+# and pscans the port number specified by that worker
+def threader():
+    while True:
+        worker = q.get()
+        getPage(worker)
+        q.task_done()
+
+for x in range(30):
+    t = threading.Thread(target=threader)
+    t.daemon = True
+    t.start()
+
+for worker in range(1,30):
+    q.put(worker)
+
+q.join()
 
 # Extract the titles from the raw data and write them to results.txt
 os.system('echo value,id > results.csv')
+# Adding this empty line ensures that the d3 visualization will not discard the
+# real first value
 os.system('echo 0,empty >> results.csv')
 os.system(bashExtract)
+dataFile.close()
 # Clean up the intermediate file
 os.system('rm stats.txt')
-dataFile.close()
