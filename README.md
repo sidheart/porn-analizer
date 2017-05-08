@@ -1,14 +1,23 @@
 # PornAnalizer
-PornAnalizer is a tool which analyzes the frequency of keywords in Pornhub's 
-top rated videos. It currently analyzes words from the first 10 pages of the
-top rated section. The data is then displayed using d3 to produce a bubble chart.
+PornAnalizer is a script which analyzes the frequency of keywords in Pornhub's 
+top rated videos. It currently analyzes words from the first 30 pages of the
+top rated section. The data is then displayed using d3 to produce a word cloud.
 
 ## Running
-Make sure you have Python 3 installed then simply run './pornAnalizer'
-This will produce a file called results.csv. Opening index.html will
-display the bubble chart. Note, this will only work on firefox. For chrome,
-you have to run a webserver and access index.html via localhost.
+Make sure you have Python 3 installed then simply run `./pornAnalizer.py`
+This will produce a file called results.csv. Now host a webserver, perhaps run 
+`python3 -m http.server` and navigate to it. The word cloud will display after
+a few seconds (depending on the size of your data).
+
+## CSV Format
+The CSV Format is 'size,text' where size corresponds to the size of the text and
+text is the actual word being displayed. The header names are irrelevant, but a
+header line must be present. Running `./pornAnalizer.py` will produce a csv 
+file with the correct format.
+
+## Isn't This Gross and Amoral?
+That's a matter of opinion. I personally find the results interesting.
+However, if this data truly repulses you please look somewhere else.
 
 ## Screenshots
 ![screenshot](/res/word_bubble.png)
-![screenshot](/res/datavis.png)
