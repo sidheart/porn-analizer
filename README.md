@@ -10,4 +10,5 @@ display the bubble chart. Note, this will only work on firefox. For chrome,
 you have to run a webserver and access index.html via localhost.
 
 ## Screenshots
+![screenshot](/res/word_bubble.png)
 ![screenshot](/res/datavis.png)
