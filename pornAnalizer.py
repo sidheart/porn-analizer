@@ -23,7 +23,7 @@ bashExtract = '''cat stats.txt | grep -e '<a href.*title=\".*</a>' | sed 's/.*"/
                  tr ' ' '\n' | tr A-Z a-z | sort | uniq -c | tr -s ' ' | sort -nr | 
                  sed '/[12] /d' | sed '/-$/d' | sed '/ to$/d' | sed '/ of$/d' | 
                  sed '/ it$/d' | sed '/ me$/d' | sed '/ my$/d' | sed '/ in$/d' | 
-                 sed '/ with$/d' | sed '/ at$/d' | sed '/ and$/d' | 
+                 sed '/ with$/d' | sed '/ at$/d' | sed '/ and$/d' | sed '/ &amp;$/d' | 
                  sed '/ the$/d' | sed '/ a$/d' | sed '/ for$/d' | sed 's/^ //g' | 
                  tr ' ' ',' >> results.csv'''
 
